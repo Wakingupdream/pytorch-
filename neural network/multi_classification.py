@@ -9,7 +9,7 @@ from torchvision import transforms, datasets
 from torch.utils.data import DataLoader
 
 
-def cross_entroy_loss_test():
+def cross_entropy_loss_test():
     # 理解交叉熵损失
     criterion = nn.CrossEntropyLoss()
     y_real = torch.LongTensor([2, 0, 1])  # 共三类，第一个样本属于2，第二个样本属于1，……
@@ -28,6 +28,7 @@ def cross_entroy_loss_test():
     print(-(y_pre1_sf_lg[0][2] + y_pre1_sf_lg[1][0] + y_pre1_sf_lg[2][1]) / 3)
 
 
+# 手写数字识别
 batch_size = 64
 transform = transforms.Compose([transforms.ToTensor(),
                                 transforms.Normalize((0.1307,),
