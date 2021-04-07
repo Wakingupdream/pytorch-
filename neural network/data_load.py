@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 # !/usr/bin/env python
-from  torch import optim
+from torch import optim
 from torch.utils.data import DataLoader
 from torch.utils.data import Dataset
 
 
+import matplotlib.pyplot as plt
 import numpy as np
+import os
 import pandas as pd
 import torch
 import torch.nn as nn
@@ -27,29 +29,34 @@ class DiabetesData(Dataset):
 
 
 dataset = DiabetesData()
-train_loader = DataLoader(dataset, shuffle=True, batch_size=32)
+train_loader = DataLoader(dataset, shuffle=True, batch_size=128)
 
 
 class Model(nn.Module):
     def __init__(self):
         super(Model, self).__init__()
-        self.linear1 = nn.Linear(8, 4)
-        self.linear2 = nn.Linear(4, 2)
-        self.linear3 = nn.Linear(2, 1)
-        self.act = nn.Sigmoid()
+        self.linear1 = nn.Linear(8, 50)
+        self.linear2 = nn.Linear(50, 30)
+        self.linear3 = nn.Linear(30, 10)
+        self.linear4 = nn.Linear(10, 1)
+        self.act = nn.ReLU()
+        self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
         x = self.act(self.linear1(x))
         x = self.act(self.linear2(x))
         x = self.act(self.linear3(x))
+        x = self.sigmoid(self.linear4(x))
         return x
 
 
 model = Model()
 criterion = nn.BCELoss()
-optimizer = optim.Adam(model.parameters(), lr=0.1)
+optimizer = optim.Adam(model.parameters(), lr=0.01)
 
-for epoch in range(1000):
+epoch_loss = []
+for epoch in range(500):
+    ls = 0
     for i, data in enumerate(train_loader):
         inputs, labels = data
         pre = model(inputs)
@@ -57,4 +64,9 @@ for epoch in range(1000):
         optimizer.zero_grad()
         ls.backward()
         optimizer.step()
-    print("loss:", ls.item())
+    epoch_loss.append(ls.item())
+os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
+plt.plot(range(len(epoch_loss)), epoch_loss)
+plt.ylabel("Loss")
+plt.xlabel("Epochs")
+plt.show()
