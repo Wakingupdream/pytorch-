@@ -29,7 +29,7 @@ class DiabetesData(Dataset):
 
 
 dataset = DiabetesData()
-train_loader = DataLoader(dataset, shuffle=True, batch_size=128)
+train_loader = DataLoader(dataset, shuffle=True, batch_size=32)
 
 
 class Model(nn.Module):
@@ -52,10 +52,10 @@ class Model(nn.Module):
 
 model = Model()
 criterion = nn.BCELoss()
-optimizer = optim.Adam(model.parameters(), lr=0.01)
+optimizer = optim.SGD(model.parameters(), lr=0.01)
 
 epoch_loss = []
-for epoch in range(500):
+for epoch in range(3000):
     ls = 0
     for i, data in enumerate(train_loader):
         inputs, labels = data
@@ -64,7 +64,8 @@ for epoch in range(500):
         optimizer.zero_grad()
         ls.backward()
         optimizer.step()
-    epoch_loss.append(ls.item())
+    if (epoch + 1) % 10 == 0:
+        epoch_loss.append(ls.item())
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 plt.plot(range(len(epoch_loss)), epoch_loss)
 plt.ylabel("Loss")
