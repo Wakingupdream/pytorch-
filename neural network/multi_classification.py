@@ -92,7 +92,7 @@ def test():
             outputs = torch.max(model(inputs), dim=1)[1]
             correct += torch.sum(outputs == labels).item()
             total += labels.shape[0]
-    print("Accuracy in test set is{0:f}%%".format(100 * correct / total))
+    print("Accuracy in test set is{0:f}%".format(100 * correct / total))
 
 
 for epoch in range(100):
