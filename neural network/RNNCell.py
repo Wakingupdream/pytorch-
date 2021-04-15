@@ -13,7 +13,7 @@ cell = torch.nn.RNNCell(input_size, hidden_size)
 
 
 dataset = torch.randn(seq_len, batch_size, input_size)
-hidden = torch.randn(batch_size, hidden_size)
+hidden = torch.zeros(batch_size, hidden_size)
 for idx, data in enumerate(dataset):
     print("=" * 20, idx, "=" * 20)
     print("Input size:", data.shape)
